@@ -40,4 +40,4 @@ This is a Node.js-based **Bookkeeping Service** application designed to manage b
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/bookkeeping-service.git
+   git clone https://github.com/sagargandhe/bookkeeping-service.git
