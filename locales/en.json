@@ -1,0 +1,21 @@
+{
+  "user": {
+    "registered_success": "User registered successfully!"
+  },
+  "book": {
+    "not_found": "Book not found",
+    "fetch_failed": "Failed to fetch books",
+    "create_failed": "Failed to create book",
+    "update_failed": "Failed to update book",
+    "delete_success": "Book deleted successfully",
+    "borrowed": "Book borrowed successfully",
+    "already_borrowed": "Book is already borrowed",
+    "not_yours": "You did not borrow this book",
+    "returned": "Book returned successfully",
+    "borrow_success": "Book borrowed successfully",
+    "borrow_failed": "Failed to borrow book",
+    "return_success": "Book returned successfully",
+    "return_failed": "Failed to return book",
+    "return_not_allowed": "You did not borrow this book"
+  }
+}
