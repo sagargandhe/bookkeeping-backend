@@ -65,21 +65,23 @@ const getAllBooks = async (req, res) => {
 const getBookById = async (req, res) => {
   try {
     const book = await Book.findById(req.params.id)
-      .populate('author', 'name email role')
-      .populate('library', 'name address')
-      .populate('borrowedBy', 'name email');
+    .populate('author', 'name email role')
+    .populate('library', 'name address')
+    .populate('borrowedBy', 'name email');
 
-    if (!book) {
-      return res.status(404).json({ status: 'fail', message: 'Book not found' });
-    }
-
-    res.status(200).json({
-      status: 'success',
-      data: { book },
-    });
-  } catch (err) {
-    res.status(500).json({ status: 'fail', message: err.message });
+  if (!book) {
+    const error = new Error('Book not found');
+    error.statusCode = 404;
+    return next(error);
   }
+
+  res.status(200).json({
+    success: true,
+    data: { book },
+  });
+} catch (err) {
+  next(err); // This sends unexpected errors to the errorHandler middleware
+}
 };
 
 // 📘 Update Book

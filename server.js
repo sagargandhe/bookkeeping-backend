@@ -7,6 +7,7 @@ const connectDB = require("./config/db");
 const bookRoutes = require("./routes/bookRoutes");
 const userRoutes = require("./routes/userRoutes");
 const libraryRoutes = require("./routes/libraryRoutes");
+const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use(i18n.init); // Load i18n before routes
+app.use(errorHandler);
 
 // Optional test route to confirm language change
 app.get("/api/test", (req, res) => {
