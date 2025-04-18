@@ -11,28 +11,31 @@ const errorHandler = require('./middlewares/errorHandler');
 
 const app = express();
 
-// Config & DB
+
 dotenv.config();
 connectDB();
 
-// Middlewares
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
-app.use(i18n.init); // Load i18n before routes
+app.use(i18n.init); 
 app.use(errorHandler);
 
-// Optional test route to confirm language change
+
 app.get("/api/test", (req, res) => {
   res.json({ message: req.t("user_registered_success") });
 });
 
-// Routes
+
 app.use("/api/users", userRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/libraries", libraryRoutes);
+app.get('/api/users/:id', (req, res) => {
+ 
+});
 
-// Server start
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 

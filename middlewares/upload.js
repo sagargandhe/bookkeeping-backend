@@ -1,9 +1,9 @@
 const multer = require("multer");
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
-const { cloudinary } = require("../utils/cloudinary"); // ✅ sahi path
+const { cloudinary } = require("../utils/cloudinary"); 
 
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary, // 👈 yahi error aa raha tha
+  cloudinary: cloudinary, 
   params: {
     folder: "book-covers",
     allowed_formats: ["jpg", "jpeg", "png"],

@@ -1,4 +1,5 @@
 const Library = require("../models/Library");
+const User = require("../models/user"); 
 
 // GET all libraries
 const getAllLibraries = async (req, res) => {
@@ -24,12 +25,24 @@ const getLibraryById = async (req, res) => {
 // CREATE new library
 const createLibrary = async (req, res) => {
   try {
-    const { name, location, description } = req.body;
-    const newLibrary = new Library({ name, location, description });
-    const savedLibrary = await newLibrary.save();
-    res.status(201).json(savedLibrary);
-  } catch (err) {
-    res.status(400).json({ message: "Failed to create library" });
+    const { name, address } = req.body;
+
+    if (!name || !address) {
+      return res.status(400).json({ message: 'Name and address are required' });
+    }
+
+    const newLibrary = await Library.create({ name, address });
+
+    res.status(201).json({
+      message: 'Library created successfully',
+      data: newLibrary,
+    });
+  } catch (error) {
+    console.error("❌ Library creation error:", error); i
+    res.status(500).json({
+      message: 'Failed to create library',
+      error: error.message,
+    });
   }
 };
 
@@ -55,20 +68,19 @@ const deleteLibrary = async (req, res) => {
   }
 };
 
-
-// @desc    Get all users (admin only)
+// GET all users (admin only)
 const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
 
     res.status(200).json({
-      message: req.t("user.all_fetched"),
+      message: "All users fetched successfully",
       count: users.length,
       users,
     });
   } catch (err) {
     console.error("Error fetching users:", err.message);
-    res.status(500).json({ message: req.t("user.server_error") });
+    res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -78,5 +90,5 @@ module.exports = {
   createLibrary,
   updateLibrary,
   deleteLibrary,
-  getAllUsers, 
+  getAllUsers,
 };

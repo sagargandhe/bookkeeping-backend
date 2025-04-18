@@ -1,11 +1,11 @@
-const User = require('../models/user'); // ✅ Make sure this path is correct
+const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const generateToken = require('../utils/generateToken');
 
-// ✅ REGISTER USER
+//  REGISTER USER
 exports.registerUser = async (req, res) => {
   const { name, email, password } = req.body;
-  const role = 'user'; // Hardcoded for safety
+  const role = 'user'; 
 
   try {
     const userExists = await User.findOne({ email });
@@ -42,7 +42,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// ✅ LOGIN USER
+// ✅LOGIN USER
 exports.loginUser = async (req, res) => {
   const { email, password } = req.body;
 

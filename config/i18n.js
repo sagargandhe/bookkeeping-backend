@@ -10,7 +10,7 @@ i18n.configure({
   updateFiles: false,
   objectNotation: true,
   api: {
-    __: "t", // <== IMPORTANT: bind req.t()
+    __: "t", 
   },
 });
 

@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/user'); // ✅ Make sure this matches your filename (all lowercase)
+const User = require('../models/user');
 const bcrypt = require('bcryptjs');
 const generateToken = require('../utils/generateToken');
 
-// 🔐 REGISTER Route
+
 router.post('/register', async (req, res) => {
   const { name, email, password, role } = req.body;
 
@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// 🔐 LOGIN Route
+//  LOGIN Route
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 

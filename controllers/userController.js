@@ -1,7 +1,6 @@
 const User = require("../models/user");
 const generateToken = require("../utils/generateToken");
 
-// @desc    Register new user
 const registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
@@ -16,7 +15,7 @@ const registerUser = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      password, // will be hashed in user model pre-save hook
+      password,
       role,
     });
 
@@ -38,7 +37,6 @@ const registerUser = async (req, res) => {
 
 
 
-// 📘 Get All Users (Admin only)
 const getAllUsers = async (req, res) => {
   if (!req.user.isAdmin()) {
     return res.status(403).json({ status: 'fail', message: 'Access denied, admin only' });
@@ -57,7 +55,6 @@ const getAllUsers = async (req, res) => {
 };
 
 
-// @desc    Login user
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -91,7 +88,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-// @desc    Get user profile (protected)
 const getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -110,7 +106,6 @@ const getUserProfile = async (req, res) => {
   }
 };
 
-// @desc    Update user profile (protected)
 const updateUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
@@ -123,7 +118,7 @@ const updateUserProfile = async (req, res) => {
     user.email = req.body.email || user.email;
 
     if (req.body.password) {
-      user.password = req.body.password; // will rehash in pre-save
+      user.password = req.body.password; 
     }
 
     const updatedUser = await user.save();
@@ -142,7 +137,6 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-// @desc    Admin update user profile (admin only)
 const adminUpdateUserProfile = async (req, res) => {
   try {
     const { id } = req.params;
@@ -158,7 +152,7 @@ const adminUpdateUserProfile = async (req, res) => {
     user.role = role || user.role;
 
     if (password) {
-      user.password = password; // will rehash in pre-save
+      user.password = password;
     }
 
     const updatedUser = await user.save();
@@ -177,7 +171,6 @@ const adminUpdateUserProfile = async (req, res) => {
   }
 };
 
-// @desc    Delete user (admin only)
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -200,7 +193,7 @@ module.exports = {
   loginUser,
   getUserProfile,
   updateUserProfile,
-  adminUpdateUserProfile, // Export admin update function
+  adminUpdateUserProfile, 
   deleteUser,
   getAllUsers,
   

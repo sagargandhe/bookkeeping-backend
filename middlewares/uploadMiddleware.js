@@ -12,4 +12,4 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({ storage });
 
-module.exports = upload; // 👈 Must export `upload`, not `storage`
+module.exports = upload; 

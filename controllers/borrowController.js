@@ -2,7 +2,6 @@ const Book = require('../models/bookModel');
 const BorrowedBook = require('../models/borrowedBook');
 const User = require('../models/user');
 
-// ✅ Borrow Book Controller
 const borrowBook = async (req, res) => {
   try {
     const { bookId } = req.body;
@@ -32,7 +31,6 @@ const borrowBook = async (req, res) => {
   }
 };
 
-// ✅ Return Book Controller
 const returnBook = async (req, res) => {
   try {
     const userId = req.user._id;

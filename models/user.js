@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
   },
 }, { timestamps: true });
 
-// 🔐 Hash password before saving (only if modified)
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   try {
@@ -37,16 +36,16 @@ userSchema.pre('save', async function (next) {
   }
 });
 
-// ✅ Instance method: compare password
+
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-// ✅ Instance method: check if user is admin
+
 userSchema.methods.isAdmin = function () {
-  return this.role && this.role.toLowerCase() === 'admin'; // Safer check
+  return this.role && this.role.toLowerCase() === 'admin'; 
 };
 
-// Export the model safely
+
 const User = mongoose.models.User || mongoose.model('User', userSchema);
 module.exports = User;

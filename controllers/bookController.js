@@ -1,28 +1,34 @@
 const Book = require("../models/bookModel");
 const User = require("../models/user");
 
-// 📘 Create Book
-const createBook = async (req, res) => {
+//  Create Book
+const createBook = async (req, res, next) => {
   try {
     console.log("🔍 Checking user role...");
     console.log("User object:", req.user);
-    console.log("User Role:", req.user.role);
 
-    // In case isAdmin() is not working, fallback to direct role check
-    const isAdmin = typeof req.user.isAdmin === 'function' ? req.user.isAdmin() : req.user.role === 'admin';
-    console.log("Is Admin:", isAdmin);
+   
+    const isAdmin = typeof req.user?.isAdmin === 'function'
+      ? req.user.isAdmin()
+      : req.user?.role === 'admin';
 
     if (!isAdmin) {
       return res.status(403).json({ status: 'fail', message: 'Access denied, admin only' });
     }
 
     const { title, author, description, library, stock } = req.body;
-    const coverImageUrl = req.file ? req.file.secure_url : null;
+
+   
+    const coverImageUrl = req.file?.secure_url || null;
 
     if (!title || !author || !description || !library || !stock) {
-      return res.status(400).json({ status: 'fail', message: 'Missing required fields' });
+      return res.status(400).json({
+        status: 'fail',
+        message: 'Please provide all required fields: title, author, description, library, stock',
+      });
     }
 
+  
     const newBook = await Book.create({
       title,
       author,
@@ -36,14 +42,16 @@ const createBook = async (req, res) => {
       status: 'success',
       data: { book: newBook },
     });
+
   } catch (err) {
-    console.error("Create book error:", err);
-    res.status(500).json({ status: 'fail', message: err.message });
+    console.error("❌ Error while creating book:", err);
+    next(err); 
   }
 };
 
 
-// 📘 Get All Books
+
+
 const getAllBooks = async (req, res) => {
   try {
     const books = await Book.find()
@@ -61,30 +69,32 @@ const getAllBooks = async (req, res) => {
   }
 };
 
-// 📘 Get Book By ID
-const getBookById = async (req, res) => {
+
+
+const getBookById = async (req, res, next) => {
   try {
     const book = await Book.findById(req.params.id)
-    .populate('author', 'name email role')
-    .populate('library', 'name address')
-    .populate('borrowedBy', 'name email');
+      .populate('author', 'name email role')
+      .populate('library', 'name address')
+      .populate('borrowedBy', 'name email');
 
-  if (!book) {
-    const error = new Error('Book not found');
-    error.statusCode = 404;
-    return next(error);
+    if (!book) {
+      const error = new Error('Book not found');
+      error.statusCode = 404;
+      return next(error);
+    }
+
+    res.status(200).json({
+      success: true,
+      data: { book },
+    });
+  } catch (err) {
+    next(err); 
   }
-
-  res.status(200).json({
-    success: true,
-    data: { book },
-  });
-} catch (err) {
-  next(err); // This sends unexpected errors to the errorHandler middleware
-}
 };
 
-// 📘 Update Book
+
+// Update Book
 const updateBook = async (req, res) => {
   try {
     const { title, author, description, stock, library } = req.body;
@@ -115,7 +125,7 @@ const updateBook = async (req, res) => {
   }
 };
 
-// 📘 Delete Book
+// Delete Book
 const deleteBook = async (req, res) => {
   try {
     const deletedBook = await Book.findByIdAndDelete(req.params.id);
@@ -130,7 +140,7 @@ const deleteBook = async (req, res) => {
   }
 };
 
-// ✅ Borrow Book
+// Borrow Book
 const borrowBook = async (req, res) => {
   try {
     const book = await Book.findById(req.params.bookId);
@@ -145,9 +155,9 @@ const borrowBook = async (req, res) => {
 
     book.borrowedBy = req.user._id;
     book.borrowedDate = new Date();
-    book.returnDate = null;
-    book.isAvailable = false;
+    book.returnDate = null; // Set this later if needed
     book.stock -= 1;
+    book.isAvailable = book.stock > 0;
 
     await book.save();
 
@@ -161,9 +171,15 @@ const borrowBook = async (req, res) => {
   }
 };
 
-// ✅ Return Book
+//  Return Book
 const returnBook = async (req, res) => {
   try {
+    const returnBook = async (req, res) => {
+      console.log("📦 Params:", req.params); // <- Yeh log karega tumhare params ko
+      res.send("Testing..."); // <- Bas response bhej dega
+    };
+    
+    console.log("📦 Book ID received:", req.params.bookId);
     const book = await Book.findById(req.params.bookId);
 
     if (!book) {
@@ -196,7 +212,7 @@ const returnBook = async (req, res) => {
   }
 };
 
-// 📘 Export all
+//  Export all
 module.exports = {
   createBook,
   getAllBooks,

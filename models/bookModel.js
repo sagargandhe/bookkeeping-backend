@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-// Define the book schema
+
 const bookSchema = new mongoose.Schema(
   {
     title: {
@@ -17,7 +17,7 @@ const bookSchema = new mongoose.Schema(
       required: [true, 'Description is required'],
     },
     coverImage: {
-      type: String, // Cloudinary URL
+      type: String,
     },
     isAvailable: {
       type: Boolean,
